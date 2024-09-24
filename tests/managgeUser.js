@@ -13,23 +13,6 @@ export let errorRate = new Rate('errors');
 const ENV = __ENV.ENVIRONMENT || 'development';  // Gunakan variabel ENV untuk menentukan environment, default 'development'
 const url = environments[ENV];
 
-// Opsi untuk menggunakan executor `per-vu-iterations`
-export const options = {
-    scenarios: {
-        my_scenario: {
-            executor: 'per-vu-iterations',
-            vus: 1,             // Hanya 1 VU yang menjalankan iterasi
-            iterations: 1,      // Setiap VU menjalankan 1 iterasi
-            maxDuration: '1m',  // Durasi maksimum eksekusi per VU
-            exec: 'manageUser'
-        }
-    },
-    thresholds: {
-        success: ['rate>0.95'],  // 95% request harus berhasil
-        http_req_duration: ['p(90)<5000'], // 90% permintaan harus selesai dalam 5000ms
-    },
-};
-
 export function manageUser() {
     group('User Management Workflow', function () {
         // Step 1: Login menggunakan URL dari environment
