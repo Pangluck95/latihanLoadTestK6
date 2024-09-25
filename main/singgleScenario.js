@@ -1,12 +1,8 @@
 import { Rate } from 'k6/metrics';
 import {
-    options_per_vu_iterations,
-    BASE_URL as CONFIG_BASE_URL
-} from '../config/config.js';
+    options_per_vu_iterations} from '../config/config.js';
 import { manageUser } from '../tests/managgeUser.js';
 
-
-export const BASE_URL = CONFIG_BASE_URL;
 export const options = options_per_vu_iterations;
 
 
