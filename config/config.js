@@ -2,7 +2,8 @@
 export const environments = {
     // Environment development, digunakan untuk pengujian pada tahap pengembangan
     development: {
-
+        loginURL: 'https://test-api.k6.io/auth/basic/login/',
+        baseURL: 'https://test-api.k6.io/my/crocodiles/',
     },
     
     // Environment staging, digunakan untuk pengujian pada tahap staging (pre-prod)
@@ -61,71 +62,22 @@ export const options = {
     scenarios: {
         // Shared Iterations: Eksekutor ini membagi sejumlah iterasi tetap di antara semua VUs
         // Dokumentasi: https://k6.io/docs/using-k6/scenarios/executors/shared-iterations/
-        scenario_sharediterations: {
+        scenario_1: {
             executor: 'shared-iterations',
-            iterations: 100, // Total iterasi yang dibagikan oleh semua VU
-            vus: 5, // jumlah VUs
+            iterations: 4, // Total iterasi yang dibagikan oleh semua VU
+            vus: 2, // jumlah VUs
             maxDuration: '30s', // durasi maksimum eksekusi
             exec: 'scenario_sharediterations' // Fungsi yang akan dieksekusi
         },
 
         // Constant Arrival Rate: Eksekutor ini menjaga jumlah request tetap konstan selama durasi tertentu.
         // Dokumentasi: https://k6.io/docs/using-k6/scenarios/executors/constant-arrival-rate/
-        scenario_constantarrivalrate: {
-            executor: 'constant-arrival-rate',
-            rate: 5, // jumlah permintaan yang harus disimulasikan per detik
-            timeUnit: '1s', // unit waktu untuk rate
-            duration: '30s', // durasi di mana tingkat kedatangan konstan
-            preAllocatedVUs: 5, // jumlah awal VUs yang dialokasikan
-            maxVUs: 10, // jumlah maksimum VUs yang dapat dialokasikan
-            exec: 'scenario_constantarrivalrate' // Fungsi yang akan dieksekusi
-        },
-
-        // Ramping Arrival Rate: Eksekutor ini meningkatkan atau menurunkan jumlah permintaan selama beberapa tahap.
-        // Dokumentasi: https://k6.io/docs/using-k6/scenarios/executors/ramping-arrival-rate/
-        scenario_rampingarrivalrate: {
-            executor: 'ramping-arrival-rate',
-            startRate: 2, // Mulai dengan 2 request/detik
-            timeUnit: '1s', // unit waktu untuk rate
-            preAllocatedVUs: 5, // alokasi VU awal
-            maxVUs: 10, // jumlah VU maksimum
-            stages: [
-                { duration: '15s', target: 5 }, // Menaikkan ke 5 request/detik dalam 15 detik
-                { duration: '15s', target: 10 }, // Menaikkan ke 10 request/detik dalam 15 detik
-                { duration: '15s', target: 5 }  // Mengurangi ke 5 request/detik dalam 15 detik
-            ],
-            exec: 'scenario_rampingarrivalrate' // Fungsi yang akan dieksekusi
-        },
-
-        // Per VU Iterations: Setiap VU menjalankan sejumlah iterasi tetap. Iterasi dapat berbeda untuk setiap VU.
-        // Dokumentasi: https://k6.io/docs/using-k6/scenarios/executors/per-vu-iterations/
-        scenario_pervuiterations: {
+        scenario_2: {
             executor: 'per-vu-iterations',
-            vus: 5, // jumlah VUs
-            iterations: 5, // Jumlah iterasi per VU
+            vus: 1, // jumlah VUs
+            iterations: 2, // Jumlah iterasi per VU
             maxDuration: '30s', // Batas waktu untuk setiap iterasi
             exec: 'scenario_pervuiterations' // Fungsi yang akan dieksekusi
-        },
-
-        // Constant VUs: Menjalankan sejumlah VUs yang konstan selama durasi tertentu.
-        // Dokumentasi: https://k6.io/docs/using-k6/scenarios/executors/constant-vus/
-        scenario_constantvus: {
-            executor: 'constant-vus',
-            vus: 5, // jumlah VUs
-            duration: '30s', // durasi eksekusi konstan
-            exec: 'scenario_constantvus' // Fungsi yang akan dieksekusi
-        },
-
-        // Ramping VUs: Secara bertahap menambah atau mengurangi jumlah VUs selama beberapa tahap.
-        // Dokumentasi: https://k6.io/docs/using-k6/scenarios/executors/ramping-vus/
-        scenario_rampingvus: {
-            executor: 'ramping-vus',
-            stages: [
-                { duration: '15s', target: 5 }, // Naikkan ke 5 VUs dalam 15 detik
-                { duration: '15s', target: 10 },  // Pertahankan di 10 VUs selama 15 detik
-                { duration: '15s', target: 0 }    // Kurangi ke 0 VUs dalam 15 detik
-            ],
-            exec: 'scenario_rampingvus' // Fungsi yang akan dieksekusi
         }
     }
 };
@@ -176,8 +128,8 @@ export const options_shared_iterations = {
 export const options_constant_arrival_rate = {
     ext: {
         loadimpact: {
-            distribution: {
-                "amazon:us:ashburn": {
+            distribution: { // Dokumentasi : https://k6.io/docs/cloud/creating-and-running-a-test/cloud-scripting-extras/load-zones/
+                "amazon:us:ashburn": {  
                     loadZone: "amazon:us:ashburn", // Zona pengujian
                     percent: 100 // 100% dari beban dialokasikan ke zona ini
                 }
